@@ -101,14 +101,15 @@ function placeOrder() {
             function(error) {
               if (error) throw err;
               console.log("[mysql error]",err);
-              console.log("Your Order for item ID" + answer.id + " was placed successfully.");
+              console.log("Your Order for item ID" + selectedItem.name + " was placed successfully.");
+              console.log("The total for your order is: " + "$ " + answer.quant*selectedItem.price)
               placeOrder();
             }
           );
         }
         else {
           // the quantity on hand wasn't large enough.
-          console.log("We're sorry, but our stock for item " + answer.id + " was too low. We could not complete your order.");
+          console.log("We're sorry, but our stock for item " + selectedItem.name + " was too low. We could not complete your order.");
           placeOrder();
         }
     })
