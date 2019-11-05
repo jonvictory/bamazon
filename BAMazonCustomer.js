@@ -17,14 +17,15 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
+  console.log("[mysql error]",err);
   console.log("connected as id " + connection.threadId);
   queryProducts();
-  //   queryDanceSongs();
 });
 
 function queryProducts() {
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
+    console.log("[mysql error]",err);
     console.log("ID | Prdct | Dpt | Price | QTY");
     console.log("-----------------------------------");
     for (var i = 0; i < res.length; i++) {
@@ -47,6 +48,9 @@ function queryProducts() {
 
 
 function placeOrder() {
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+        console.log("[mysql error]",err);
     // prompt for info about the items desired for purchase
     inquirer
       .prompt([
@@ -64,35 +68,39 @@ function placeOrder() {
       ])
       .then(function(answer) {
         console.log(answer.id)
-        connection.query("SELECT * FROM products", function(err, res) {
-            if (err) throw err;
+        
         // get the information about the desired item
         var selectedItem;
-        for (var i = 0; i < res.length; i++) {
-          if (res[i].item_id === parseInt(answer.id)) {
-            selectedItem = res[i];
+        for (var j = 0; j < res.length; j++) {
+          if (res[j].item_id === parseInt(answer.id)) {
+            selectedItem = res[j];
           }
-          console.log(selectedItem)
+          
         // console.log(res[i])
         }
+        
         // console.log(selectedItem)
         // console.log(res[i])
         // determine if the warehouse has the stock to fulfill the purchase
-    })
+    
         if (selectedItem.stock_quantity > parseInt(answer.quant)) {
           // The database showed an adequette quantity so update the the inventory with the purchase.
+          //console.log(selectedItem.stock_quantity)
+          console.log(selectedItem.item_id)
           connection.query(
             "UPDATE products SET ? WHERE ?",
             [
               {
-                stock_quantity: stock_quantity=-answer.quant
+                stock_quantity: selectedItem.stock_quantity - parseInt(answer.quant)
               },
               {
-                id: selectedItem.id
+                item_id: selectedItem.item_id
               }
             ],
+            
             function(error) {
               if (error) throw err;
+              console.log("[mysql error]",err);
               console.log("Your Order for item ID" + answer.id + " was placed successfully.");
               placeOrder();
             }
@@ -103,7 +111,7 @@ function placeOrder() {
           console.log("We're sorry, but our stock for item " + answer.id + " was too low. We could not complete your order.");
           placeOrder();
         }
-    
+    })
       });
   }
 
