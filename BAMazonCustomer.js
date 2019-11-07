@@ -77,7 +77,7 @@ function placeOrder() {
 
         // determine if the warehouse has the stock to fulfill the purchase
 
-        if (selectedItem.stock_quantity > parseInt(answer.quant)) {
+        if (selectedItem.stock_quantity >= parseInt(answer.quant)) {
           // The database showed an adequette quantity so update the the inventory with the purchase.
         connection.query(
             "UPDATE products SET ? WHERE ?",
