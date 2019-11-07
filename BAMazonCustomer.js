@@ -119,16 +119,3 @@ function placeOrder() {
       });
   });
 }
-
-// function queryDanceSongs() {
-//   var query = connection.query("SELECT * FROM songs WHERE genre=?", ["Dance"], function(err, res) {
-//     if (err) throw err;
-//     for (var i = 0; i < res.length; i++) {
-//       console.log(res[i].id + " | " + res[i].title + " | " + res[i].artist + " | " + res[i].genre);
-//     }
-//   });
-
-// logs the actual query being run
-//   console.log(query.sql);
-//   connection.end();
-// }
